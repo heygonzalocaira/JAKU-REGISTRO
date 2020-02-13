@@ -10,6 +10,15 @@ from openpyxl import Workbook
 date = strftime("%Y-%m-%d", gmtime())
 file_csv = "Registro CSV " 
 file_csv = file_csv + date +".csv"
+
+
+def listToString(s):  
+    str1 = ""
+    for sub_s in s:
+        str1 = str1 +''.join((str(e)+" ") for e in sub_s) 
+        str1 = str1 + " | "    
+    return str1
+
 #print(list_teams)
 def change_assistance(var,list_teams):
     str(var)
@@ -30,17 +39,44 @@ def change_endTime(var,list_teams):
 def write_assitance(list_teams,file_csv):
     
     with open(file_csv, 'w', newline='') as file:
-                    fieldnames = ['Nombre del emprendimiento', 'Asistencia','Dia','Hora Entrada',"Hora Salida"]
+                    fieldnames = ['Nombre del emprendimiento', 'Asistencia','Integrantes presentes DNI Telefono','Dia','Hora Entrada']
                     writer = csv.DictWriter(file, fieldnames=fieldnames)
                     writer.writeheader()
+                    #people = ""
                     for one_list in list_teams:
                         writer.writerow({'Nombre del emprendimiento': one_list.name, 
                                             'Asistencia': one_list.assistance,
+                                            'Integrantes presentes DNI Telefono':listToString([(p.name,p.dni,p.cellphone) for p in one_list.list_people if p.came == True]),#people,
+                                            #'Integrantes presentes DNI Telefono':listToString([(p.name,p.dni,p.cellphone) for p in one_list.list_people if p.came == True]),#people,
+                                            #'Integrantes presentes DNI Telefono':one_list.list_peole[0].name,
                                             'Dia':one_list.date,
                                             'Hora Entrada':one_list.startTime,
-                                            'Hora Salida':one_list.endTime})
-    
+                                            })
 
+def write_assitance2_0(list_teams,file_csv):
+    
+    with open(file_csv, 'w', newline='') as file:
+                    fieldnames = ['Emprendimiento', 'Asistencia','Integrante','DNI','Celular','Dia','Hora Entrada','Hora Salida','Firma']
+                    writer = csv.DictWriter(file, fieldnames=fieldnames)
+                    writer.writeheader()
+                    #people = ""
+                    for one_list in list_teams:
+                        #list_p = one_list.list_people
+                        for p in one_list.list_people:
+                            if p.came == True:
+                                writer.writerow({'Emprendimiento': one_list.name, 
+                                                    'Asistencia': one_list.assistance,
+                                                    'Integrante':p.name,
+                                                    'DNI':p.dni,
+                                                    'Celular':p.cellphone,
+                                                    'Dia':one_list.date,
+                                                    'Hora Entrada':one_list.startTime,
+                                                    'Hora Salida':one_list.startTime,
+                                                    'Firma':" ",
+                                                    })
+
+
+#GUI
 
 pygame.init()
 screen = pygame.display.set_mode((900, 600))
@@ -58,6 +94,7 @@ class InputBox:
         self.txt_surface = FONT.render(text, True, self.color)
         self.active = False
         self.message = ""
+        self.showPerson = ""
 
 
     def handle_event(self, event):
@@ -172,7 +209,7 @@ def main():
         screen.blit(mensaje_S, (100, 400))
         pygame.display.flip()
         clock.tick(60)
-        write_assitance(list_teams,file_csv)
+        write_assitance2_0(list_teams,file_csv)
 
 if __name__ == '__main__':
     main()
