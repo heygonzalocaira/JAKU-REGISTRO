@@ -56,7 +56,7 @@ def write_assitance(list_teams,file_csv):
 def write_assitance2_0(list_teams,file_csv):
     
     with open(file_csv, 'w', newline='') as file:
-                    fieldnames = ['Emprendimiento', 'Asistencia','Integrante','DNI','Celular','Dia','Hora Entrada','Hora Salida','Firma']
+                    fieldnames = ['Emprendimiento','Integrante: Apellidos & Nombres','DNI','Celular','Dia','Hora Entrada','Hora Salida','Firma']
                     writer = csv.DictWriter(file, fieldnames=fieldnames)
                     writer.writeheader()
                     #people = ""
@@ -65,13 +65,13 @@ def write_assitance2_0(list_teams,file_csv):
                         for p in one_list.list_people:
                             if p.came == True:
                                 writer.writerow({'Emprendimiento': one_list.name, 
-                                                    'Asistencia': one_list.assistance,
+                                                    #'Asistencia': one_list.assistance,
                                                     'Integrante':p.name,
                                                     'DNI':p.dni,
                                                     'Celular':p.cellphone,
                                                     'Dia':one_list.date,
                                                     'Hora Entrada':one_list.startTime,
-                                                    'Hora Salida':one_list.startTime,
+                                                    'Hora Salida':one_list.endTime,
                                                     'Firma':" ",
                                                     })
 
